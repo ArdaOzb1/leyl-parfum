@@ -33,15 +33,15 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Açılış İntro Efekti (İlk girişte 1.2s durup zarifçe solarak kapanır)
+  // Açılış İntro Efekti (2 saniye gösterilip yumuşakça kararır)
   useEffect(() => {
     const fadeTimer = setTimeout(() => {
       setIsFadingOut(true);
-    }, 1200);
+    }, 2000);
 
     const removeTimer = setTimeout(() => {
       setIsLoading(false);
-    }, 1900); // 700ms'lik yumuşak fade-out geçişi
+    }, 2800); // 800ms yumuşak fade-out geçişi
 
     return () => {
       clearTimeout(fadeTimer);
@@ -66,7 +66,7 @@ export default function App() {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % FRAGRANCES.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + FRAGRANCES.length) % FRAGRANCES.length);
 
-  // Kategori & Mevsim Filtreleme Mantığı (Hatasız)
+  // Kategori & Mevsim Filtreleme Mantığı
   const filteredFragrances = FRAGRANCES.filter(item => {
     const matchCategory = activeCategory === 'all' || item.category === activeCategory;
     const matchSeason = activeSeason === 'all' || item.season === activeSeason || item.season === 'all';
@@ -129,14 +129,24 @@ export default function App() {
             isFadingOut ? 'opacity-0 pointer-events-none scale-105' : 'opacity-100'
           }`}
         >
-          <div className="text-center space-y-4 px-6">
-            <h1 className="font-serif text-5xl sm:text-7xl tracking-[0.35em] uppercase text-[#141413] font-light animate-pulse">
-              LEYL
-            </h1>
-            <div className="w-12 h-[1px] bg-[#C5A880] mx-auto my-3 opacity-60" />
-            <p className="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#C5A880] font-medium">
-              %100 Saf Yağ Esansı &bull; Tene Mühürlenen Saflık
-            </p>
+          <div className="text-center space-y-5 px-6 flex flex-col items-center">
+            {/* Hilal & Damla Monogramı (Preloader) */}
+            <div className="w-16 h-16 rounded-full border border-[#C5A880]/40 flex items-center justify-center p-3 shadow-inner bg-white/40">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full text-[#C5A880]">
+                <path d="M50 15 C45 35, 30 55, 30 70 A20 20 0 0 0 70 70 C70 55, 55 35, 50 15 Z" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path d="M72 30 A35 35 0 0 1 72 80" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+              </svg>
+            </div>
+
+            <div>
+              <h1 className="font-serif text-5xl sm:text-7xl tracking-[0.35em] uppercase text-[#141413] font-light">
+                LEYL
+              </h1>
+              <div className="w-12 h-[1px] bg-[#C5A880] mx-auto my-3 opacity-60" />
+              <p className="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#C5A880] font-medium">
+                %100 Saf Yağ Esansı &bull; Tene Mühürlenen Saflık
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -179,9 +189,18 @@ export default function App() {
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-[#FAF7F2]/85 border-b border-[#E5DCCE] px-6 lg:px-20 py-5 flex items-center justify-between transition-all">
         <button 
           onClick={() => setCurrentPage('home')}
-          className="font-serif text-3xl sm:text-4xl tracking-[0.3em] font-normal uppercase text-left hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 group hover:opacity-85 transition-opacity"
         >
-          LEYL
+          {/* Logo Monogram İkonu */}
+          <div className="w-8 h-8 rounded-full border border-[#C5A880]/50 flex items-center justify-center p-1.5 bg-white/60">
+            <svg viewBox="0 0 100 100" fill="none" className="w-full h-full text-[#141413] group-hover:text-[#C5A880] transition-colors">
+              <path d="M50 15 C45 35, 30 55, 30 70 A20 20 0 0 0 70 70 C70 55, 55 35, 50 15 Z" stroke="currentColor" strokeWidth="6" fill="none" />
+              <path d="M72 30 A35 35 0 0 1 72 80" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+            </svg>
+          </div>
+          <span className="font-serif text-3xl sm:text-4xl tracking-[0.3em] font-normal uppercase text-left">
+            LEYL
+          </span>
         </button>
 
         <nav className="flex items-center gap-8 text-[11px] tracking-[0.2em] uppercase font-semibold">
@@ -465,7 +484,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* ÜRÜN KARTLARI (VE BOŞ DURUM YÖNETİMİ) */}
+          {/* ÜRÜN KARTLARI */}
           {filteredFragrances.length === 0 ? (
             <div className="p-16 rounded-[2.5rem] bg-white border border-[#E5DCCE] text-center space-y-4">
               <h3 className="font-serif text-2xl text-[#141413]">Bu Filtrede Ürün Bulunamadı</h3>
@@ -553,7 +572,7 @@ export default function App() {
             </div>
           )}
 
-          {/* MEVSİM REHBERİ (SAYFA SONUNDAKİ BİLGİ ALANI) */}
+          {/* MEVSİM REHBERİ */}
           <section className="mt-20 pt-16 border-t border-[#E5DCCE] space-y-12">
             <div className="text-center space-y-3">
               <span className="text-xs font-bold tracking-[0.25em] text-[#C5A880] uppercase">Mevsimsel Koku Sanatı</span>
@@ -837,9 +856,17 @@ export default function App() {
       {/* FOOTER */}
       <footer className="bg-[#141413] text-[#FAF7F2] py-14 px-6 lg:px-20 border-t border-stone-800 mt-20">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <span className="font-serif text-3xl tracking-[0.3em] font-normal uppercase">LEYL</span>
-            <p className="text-xs text-[#736F68] mt-1">Saf Esans Koleksiyonu &bull; Tüm Hakları Saklıdır.</p>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full border border-[#C5A880]/50 flex items-center justify-center p-1.5 bg-white/5">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full text-[#FAF7F2]">
+                <path d="M50 15 C45 35, 30 55, 30 70 A20 20 0 0 0 70 70 C70 55, 55 35, 50 15 Z" stroke="currentColor" strokeWidth="6" fill="none" />
+                <path d="M72 30 A35 35 0 0 1 72 80" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div>
+              <span className="font-serif text-3xl tracking-[0.3em] font-normal uppercase">LEYL</span>
+              <p className="text-xs text-[#736F68] mt-0.5">Saf Esans Koleksiyonu &bull; Tüm Hakları Saklıdır.</p>
+            </div>
           </div>
           <div className="flex gap-8 text-xs tracking-wider uppercase text-[#736F68]">
             <button onClick={() => setCurrentPage('home')} className="hover:text-white transition-colors">Hikaye & Felsefe</button>
