@@ -94,11 +94,13 @@ export default function App() {
     );
   };
 
+  // Fiyat ve Kargo Hesaplamaları: 300 TL Ürün, 200 TL Kargo, 5 ve üzeri ücretsiz
   const totalItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const isFreeShipping = totalItemCount >= 2;
-  const shippingFee = totalItemCount === 0 ? 0 : (isFreeShipping ? 0 : 150);
+  const isFreeShipping = totalItemCount >= 5;
+  const shippingFee = totalItemCount === 0 ? 0 : (isFreeShipping ? 0 : 200);
   const grandTotal = subtotal + shippingFee;
+  const itemsNeededForFreeShipping = Math.max(0, 5 - totalItemCount);
 
   const handleWhatsAppCheckout = () => {
     if (cart.length === 0) return;
@@ -107,7 +109,7 @@ export default function App() {
       message += `• ${item.name} (${item.volume}) x ${item.quantity} adet: ${item.price * item.quantity} ₺\n`;
     });
     message += `\nAra Toplam: ${subtotal} ₺`;
-    message += `\nKargo Ücreti: ${isFreeShipping ? '0 ₺ (Ücretsiz Kargo Kampanyası)' : `${shippingFee} ₺`}`;
+    message += `\nKargo Ücreti: ${isFreeShipping ? '0 ₺ (5+ Alımda Ücretsiz Kargo Kampanyası)' : `${shippingFee} ₺`}`;
     message += `\nGenel Toplam: ${grandTotal} ₺`;
     
     const phoneNumber = "905000000000";
@@ -161,7 +163,7 @@ export default function App() {
           <div className="flex items-center gap-12 shrink-0">
             <span>✨ %100 SAF KONSANTRE YAĞ</span>
             <span>&bull;</span>
-            <span className="text-[#C5A880]">2 ADET VE ÜZERİ ALIMLARDA KARGO BEDAVA</span>
+            <span className="text-[#C5A880]">5 ADET VE ÜZERİ ALIMLARDA KARGO BEDAVA</span>
             <span>&bull;</span>
             <span>ALKOLSÜZ & İBADETE UYGUN FORMÜL</span>
             <span>&bull;</span>
@@ -173,7 +175,7 @@ export default function App() {
           <div className="flex items-center gap-12 shrink-0 ml-12">
             <span>✨ %100 SAF KONSANTRE YAĞ</span>
             <span>&bull;</span>
-            <span className="text-[#C5A880]">2 ADET VE ÜZERİ ALIMLARDA KARGO BEDAVA</span>
+            <span className="text-[#C5A880]">5 ADET VE ÜZERİ ALIMLARDA KARGO BEDAVA</span>
             <span>&bull;</span>
             <span>ALKOLSÜZ & İBADETE UYGUN FORMÜL</span>
             <span>&bull;</span>
@@ -441,7 +443,7 @@ export default function App() {
                 <span className="text-[11px] font-bold tracking-[0.25em] text-[#C5A880] uppercase">Mağaza</span>
                 <h1 className="font-serif text-5xl sm:text-6xl font-normal mt-2">Tüm Koleksiyon</h1>
                 <p className="text-xs text-[#736F68] mt-2">
-                  250 ₺ / Adet &bull; <strong>2 veya daha fazla alımda kargo ÜCRETSİZ!</strong>
+                  300 ₺ / Adet &bull; <strong>5 veya daha fazla alımda kargo ÜCRETSİZ!</strong>
                 </p>
               </div>
 
@@ -557,7 +559,7 @@ export default function App() {
                   <div className="mt-8 pt-5 border-t border-[#E5DCCE] flex items-center justify-between">
                     <div>
                       <span className="text-2xl font-serif font-bold text-[#141413]">{item.price} ₺</span>
-                      <p className="text-[10px] text-[#736F68] mt-0.5">+150 ₺ Kargo</p>
+                      <p className="text-[10px] text-[#736F68] mt-0.5">+200 ₺ Kargo</p>
                     </div>
                     <button 
                       onClick={() => addToCart(item)}
@@ -819,9 +821,11 @@ export default function App() {
                 <div className="p-3 rounded-xl bg-white/70 border border-[#E5DCCE] flex items-center gap-2 text-xs">
                   <Truck className="w-4 h-4 text-[#C5A880] shrink-0" />
                   {isFreeShipping ? (
-                    <span className="text-emerald-800 font-semibold">Tebrikler! 2 ürün aldığınız için Kargo ÜCRETSİZ.</span>
+                    <span className="text-emerald-800 font-semibold">Tebrikler! 5 veya daha fazla ürün aldığınız için Kargo ÜCRETSİZ.</span>
                   ) : (
-                    <span className="text-[#736F68]">1 ürün daha ekleyin, <strong>150 ₺ Kargo BEDAVA</strong> olsun!</span>
+                    <span className="text-[#736F68]">
+                      {itemsNeededForFreeShipping} ürün daha ekleyin, <strong>200 ₺ Kargo BEDAVA</strong> olsun!
+                    </span>
                   )}
                 </div>
 
